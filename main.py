@@ -13,39 +13,61 @@ def how_many_tags(paragraph_text):
     return n
 
 
-def find_and_append_teg_from_strs(paragraph):
-    tags = how_many_tags(paragraph.text)
-    paragraph_text = paragraph.text
-    global l
-    while tags != 0:
-        start = paragraph_text.find('{{')
-        end = paragraph_text.find('}}', start)
-        if start != -1 and end != -1 and paragraph_text != '':
-            # print(paragraph_text[start + 2:end])
-            l.append(paragraph_text[start + 2:end])
-        paragraph_text = paragraph_text[end + 2:]
-        tags -= 1
+def find_and_append_tags_from_strs():
+    list_of_tags_from_strs = []
+    for paragraph in doc.paragraphs:
+        tags = how_many_tags(paragraph.text)
+        paragraph_text = paragraph.text
+        while tags != 0:
+            start = paragraph_text.find('{{')
+            end = paragraph_text.find('}}', start)
+            if start != -1 and end != -1 and paragraph_text != '':
+                list_of_tags_from_strs.append(paragraph_text[start + 2:end])
+            paragraph_text = paragraph_text[end + 2:]
+            tags -= 1
+    return list_of_tags_from_strs
 
 
-l = []
+def find_and_append_tags_from_tables():
+    list_of_tags_from_tables = []
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                tags = how_many_tags(cell.text)
+                cell_text = cell.text
+                while tags != 0:
+                    start = cell_text.find('{{')
+                    end = cell_text.find('}}', start)
+                    if start != -1 and end != -1 and cell_text != '':
+                        list_of_tags_from_tables.append(cell_text[start + 2:end])
+                    cell_text = cell_text[end + 2:]
+                    tags -= 1
+    return list_of_tags_from_tables
 
-for paragraph in doc.paragraphs:
-    find_and_append_teg_from_strs(paragraph)
-# print(l, len(l))
-s = list(set(l))
-# print(s, len(s))
-d = {}
-for i in range(0, len(s)):
-    d[s[i]] = 'value of ' + s[i]
-print(d, len(d))
 
-for table in doc.tables:
-    for row in table.rows:
-        for cell in row.cells:
-            print(cell.text)
+def making_dict_and_adding_keys(tags_from_strs, tags_from_tables):
+    list_of_tags = list(set(tags_from_strs + tags_from_tables))
+    dict_of_tags = {}
+    for i in range(0, len(list_of_tags)):
+        dict_of_tags[list_of_tags[i]] = 'value of ' + list_of_tags[i]
+    print(dict_of_tags, len(dict_of_tags))
+
+
+making_dict_and_adding_keys(find_and_append_tags_from_strs(), find_and_append_tags_from_tables())
+
+
+# print(find_and_append_tags_from_strs())
+# print(find_and_append_tags_from_tables(), len(find_and_append_tags_from_tables()))
+
+# # print(l, len(l))
+# s = list(set(l))
+# # print(s, len(s))
+# d = {}
+
+
 # print('*' * 20)
 # print(doc.tables[2].cell(0, 1).text)
 
 
-# def find_and_append_teg_from_tables()
+# def find_and_append_tag_from_tables()
 # doc.save('test_updated.docx')
