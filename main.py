@@ -39,10 +39,13 @@ for i in range(0, len(s)):
     d[s[i]] = 'value of ' + s[i]
 print(d, len(d))
 
-# for table in doc.tables:
-# def find_and_append_teg_from_tables()
-# print(doc.tables[2].cell(0, 0).text)
+for table in doc.tables:
+    for row in table.rows:
+        for cell in row.cells:
+            print(cell.text)
 # print('*' * 20)
 # print(doc.tables[2].cell(0, 1).text)
 
+
+# def find_and_append_teg_from_tables()
 # doc.save('test_updated.docx')
