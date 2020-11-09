@@ -50,7 +50,14 @@ def making_dict_and_adding_keys(tags_from_strs, tags_from_tables):
     dict_of_tags = {}
     for i in range(0, len(list_of_tags)):
         dict_of_tags[list_of_tags[i]] = 'value of ' + list_of_tags[i]
-    print(dict_of_tags, len(dict_of_tags))
+    for value in dict_of_tags.items():
+        new_value = input('Введите значение тега "{}": '.format(value[0]))
+        if new_value != '':
+            dict_of_tags[value[0]] = new_value
+    print(dict_of_tags)
+    # print(dict_of_tags, len(dict_of_tags))
+    # for value in dict_of_tags.items():
+    #     print(type(list(value)))
 
 
 making_dict_and_adding_keys(find_and_append_tags_from_strs(), find_and_append_tags_from_tables())
