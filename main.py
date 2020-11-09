@@ -54,14 +54,33 @@ def making_dict_and_adding_keys(tags_from_strs, tags_from_tables):
         new_value = input('Введите значение тега "{}": '.format(value[0]))
         if new_value != '':
             dict_of_tags[value[0]] = new_value
-    print(dict_of_tags)
+    return dict_of_tags
+    # print(dict_of_tags)
     # print(dict_of_tags, len(dict_of_tags))
     # for value in dict_of_tags.items():
     #     print(type(list(value)))
 
 
-making_dict_and_adding_keys(find_and_append_tags_from_strs(), find_and_append_tags_from_tables())
+def rewriting_tags_to_doc(dict):
+    for paragraph in doc.paragraphs:
+        for value in dict.items():
+            if value[0] in paragraph.text:
+                start = paragraph.text.find('{{' + value[0])
+                end = paragraph.text.find(value[0] + '}}', start)
+                paragraph.text = paragraph.text[:start] + value[1] + paragraph.text[end + 2 + len(value[0]):]
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for value in dict.items():
+                    if value[0] in cell.text:
+                        start = cell.text.find('{{' + value[0])
+                        end = cell.text.find(value[0] + '}}', start)
+                        cell.text = cell.text[:start] + value[1] + cell.text[end + 2 + len(value[0]):]
 
+
+d = making_dict_and_adding_keys(find_and_append_tags_from_strs(), find_and_append_tags_from_tables())
+rewriting_tags_to_doc(d)
+doc.save('test_updated.docx')
 
 # print(find_and_append_tags_from_strs())
 # print(find_and_append_tags_from_tables(), len(find_and_append_tags_from_tables()))
@@ -77,4 +96,4 @@ making_dict_and_adding_keys(find_and_append_tags_from_strs(), find_and_append_ta
 
 
 # def find_and_append_tag_from_tables()
-# doc.save('test_updated.docx')
+
